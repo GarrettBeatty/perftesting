@@ -1,0 +1,21 @@
+
+Workload Configuration:
+- MaxRepeatCount: 10
+- MaxRepeatSecs: 600
+- FilesOnDisk: False
+
+Tasks:
+- Task: action=download, size=5,368,709,120 bytes, key=download/5GiB-1x/1
+
+Total bytes per run: 5,368,709,120
+
+Run:1 Secs:30.415219 Gb/s:1.412111
+Run:2 Secs:30.107030 Gb/s:1.426566
+Run:3 Secs:30.107630 Gb/s:1.426538
+Run:4 Secs:30.085098 Gb/s:1.427606
+Run:5 Secs:30.147926 Gb/s:1.424631
+Run:6 Secs:30.114183 Gb/s:1.426227
+Run:7 Secs:30.134483 Gb/s:1.425267
+Run:8 Secs:30.112605 Gb/s:1.426302
+Run:9 Secs:30.090052 Gb/s:1.427371
+Run:10 Secs:30.105236 Gb/s:1.426651

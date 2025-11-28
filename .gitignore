@@ -7,11 +7,6 @@
 *_results_*.json
 *.md
 
-# Raw log files
-*.log
-logs/
-linux/*.log
-
 # Python cache and compiled files
 __pycache__/
 *.py[cod]
