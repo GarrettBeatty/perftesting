@@ -68,7 +68,18 @@ class LogParser:
     def parse_log_file(self, file_path: Path) -> Optional[TestResult]:
         """Parse a single log file and return TestResult"""
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            # Detect encoding by reading BOM (Byte Order Mark)
+            encoding = 'utf-8'
+            with open(file_path, 'rb') as f:
+                bom = f.read(2)
+                if bom == b'\xff\xfe':
+                    encoding = 'utf-16-le'
+                elif bom == b'\xfe\xff':
+                    encoding = 'utf-16-be'
+                elif bom.startswith(b'\xef\xbb\xbf'):
+                    encoding = 'utf-8-sig'
+            
+            with open(file_path, 'r', encoding=encoding) as f:
                 content = f.read()
             
             # Extract platform from path (e.g., linux/, windows/)
