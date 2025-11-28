@@ -325,6 +325,117 @@ class PerformanceAnalyzer:
             json.dump(json_data, f, indent=2)
         
         print(f"JSON report exported to: {filename}")
+    
+    def generate_markdown_summary_table(self, platform: str) -> str:
+        """Generate a markdown summary table for a specific platform"""
+        pairs = self.find_test_pairs(platform)
+        if not pairs:
+            return f"No matching single/multi-part test pairs found for {platform}"
+        
+        markdown_lines = []
+        markdown_lines.append(f"## {platform.upper()} Platform Results")
+        markdown_lines.append("")
+        markdown_lines.append("| Test Type | File Size | Storage | Single (Gb/s) | Multi (Gb/s) | Improvement | Time Reduction |")
+        markdown_lines.append("|-----------|-----------|---------|---------------|--------------|-------------|----------------|")
+        
+        for single, multi in pairs:
+            improvement = self.calculate_improvement(single, multi)
+            storage_type = "Disk" if single.files_on_disk else "RAM"
+            file_size = self.format_file_size(single.file_size_bytes)
+            
+            # Extract base test name
+            base_name = single.test_name.replace('-1x', '').replace('GiB-', 'GiB ')
+            if '-ram' in base_name:
+                base_name = base_name.replace('-ram', ' (RAM)')
+            
+            markdown_lines.append(
+                f"| {base_name} | {file_size} | {storage_type} | "
+                f"{improvement['single_mean_throughput']:.2f} | "
+                f"{improvement['multi_mean_throughput']:.2f} | "
+                f"{improvement['throughput_improvement_ratio']:.1f}x | "
+                f"{improvement['time_reduction_percent']:.1f}% |"
+            )
+        
+        return "\n".join(markdown_lines)
+    
+    def generate_markdown_detailed_table(self, platform: str) -> str:
+        """Generate a markdown detailed breakdown table for a specific platform"""
+        pairs = self.find_test_pairs(platform)
+        if not pairs:
+            return f"No matching single/multi-part test pairs found for {platform}"
+        
+        markdown_lines = []
+        markdown_lines.append(f"## Detailed Performance Breakdown - {platform.upper()}")
+        markdown_lines.append("")
+        
+        for single, multi in pairs:
+            improvement = self.calculate_improvement(single, multi)
+            storage_type = "to Disk" if single.files_on_disk else "to RAM"
+            file_size = self.format_file_size(single.file_size_bytes)
+            
+            markdown_lines.append(f"### {file_size} Download {storage_type}")
+            markdown_lines.append("")
+            markdown_lines.append("| Metric | Single-part | Multi-part | Improvement |")
+            markdown_lines.append("|--------|-------------|------------|-------------|")
+            markdown_lines.append(f"| **Throughput (Gb/s)** | {improvement['single_mean_throughput']:.2f} | {improvement['multi_mean_throughput']:.2f} | {improvement['throughput_improvement_ratio']:.1f}x |")
+            markdown_lines.append(f"| **Average Time (s)** | {improvement['single_mean_time']:.1f} | {improvement['multi_mean_time']:.1f} | {improvement['time_reduction_percent']:.1f}% reduction |")
+            
+            # Add statistical details
+            single_stats = single.get_stats()
+            multi_stats = multi.get_stats()
+            
+            markdown_lines.append("")
+            markdown_lines.append("#### Statistical Details")
+            markdown_lines.append("")
+            markdown_lines.append("| Statistic | Single-part | Multi-part |")
+            markdown_lines.append("|-----------|-------------|------------|")
+            markdown_lines.append(f"| **Min Time (s)** | {single_stats['min_time']:.2f} | {multi_stats['min_time']:.2f} |")
+            markdown_lines.append(f"| **Max Time (s)** | {single_stats['max_time']:.2f} | {multi_stats['max_time']:.2f} |")
+            markdown_lines.append(f"| **Std Dev Time** | {single_stats['std_time']:.2f} | {multi_stats['std_time']:.2f} |")
+            markdown_lines.append(f"| **Min Throughput (Gb/s)** | {single_stats['min_throughput']:.2f} | {multi_stats['min_throughput']:.2f} |")
+            markdown_lines.append(f"| **Max Throughput (Gb/s)** | {single_stats['max_throughput']:.2f} | {multi_stats['max_throughput']:.2f} |")
+            markdown_lines.append(f"| **Std Dev Throughput** | {single_stats['std_throughput']:.2f} | {multi_stats['std_throughput']:.2f} |")
+            markdown_lines.append("")
+        
+        return "\n".join(markdown_lines)
+    
+    def generate_markdown_report(self, platform: str = None) -> str:
+        """Generate a comprehensive markdown performance comparison report"""
+        if platform and platform not in self.results:
+            return f"No results found for platform: {platform}"
+        
+        platforms_to_process = [platform] if platform else list(self.results.keys())
+        markdown_lines = []
+        
+        markdown_lines.append("# Performance Analysis Report")
+        markdown_lines.append("")
+        markdown_lines.append("This report compares single-part vs multi-part download performance across different platforms.")
+        markdown_lines.append("")
+        
+        for plat in platforms_to_process:
+            if not self.results[plat]:
+                continue
+            
+            # Add summary table
+            summary_table = self.generate_markdown_summary_table(plat)
+            markdown_lines.append(summary_table)
+            markdown_lines.append("")
+            
+            # Add detailed breakdown
+            detailed_table = self.generate_markdown_detailed_table(plat)
+            markdown_lines.append(detailed_table)
+            markdown_lines.append("")
+        
+        return "\n".join(markdown_lines)
+    
+    def export_markdown(self, filename: str, platform: str = None) -> None:
+        """Export results to Markdown format"""
+        markdown_content = self.generate_markdown_report(platform)
+        
+        with open(filename, 'w', encoding='utf-8') as f:
+            f.write(markdown_content)
+        
+        print(f"Markdown report exported to: {filename}")
 
 
 def main():
@@ -338,6 +449,7 @@ Examples:
   python performance_analyzer.py --platform linux  # Analyze only Linux results
   python performance_analyzer.py --export-csv results.csv
   python performance_analyzer.py --export-json results.json
+  python performance_analyzer.py --export-markdown results.md
         """
     )
     
@@ -347,6 +459,8 @@ Examples:
                       help='Export results to CSV file')
     parser.add_argument('--export-json', type=str, metavar='FILENAME', 
                       help='Export results to JSON file')
+    parser.add_argument('--export-markdown', type=str, metavar='FILENAME',
+                      help='Export results to Markdown file')
     parser.add_argument('--base-path', type=str, default='.',
                       help='Base directory containing platform folders (default: current directory)')
     
@@ -387,6 +501,14 @@ Examples:
             base, ext = os.path.splitext(filename)
             filename = f"{base}_{args.platform}{ext}"
         analyzer.export_json(filename, args.platform)
+    
+    if args.export_markdown:
+        filename = args.export_markdown
+        if args.platform:
+            # Add platform to filename
+            base, ext = os.path.splitext(filename)
+            filename = f"{base}_{args.platform}{ext}"
+        analyzer.export_markdown(filename, args.platform)
 
 
 if __name__ == "__main__":

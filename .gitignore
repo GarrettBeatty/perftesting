@@ -5,6 +5,7 @@
 *.json
 *_results_*.csv
 *_results_*.json
+*.md
 
 # Raw log files
 *.log
