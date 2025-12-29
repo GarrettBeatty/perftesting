@@ -1,0 +1,27 @@
+=== Running download-30GiB-1x-ram.run.json with WithResponse APIs ===
+Start time: Thu Dec 25 15:04:01 UTC 2025
+
+
+Workload Configuration:
+- MaxRepeatCount: 10
+- MaxRepeatSecs: 600
+- FilesOnDisk: False
+- WithResponseApis: True
+
+Tasks:
+- Task: action=download, size=32,212,254,720 bytes, key=download/30GiB-1x/1
+
+Total bytes per run: 32,212,254,720
+
+Run:1 Secs:26.615339 Gb/s:9.682313
+Run:2 Secs:21.767813 Gb/s:11.838490
+Run:3 Secs:24.768467 Gb/s:10.404279
+Run:4 Secs:25.422004 Gb/s:10.136811
+Run:5 Secs:19.106249 Gb/s:13.487631
+Run:6 Secs:19.401585 Gb/s:13.282319
+Run:7 Secs:21.520379 Gb/s:11.974605
+Run:8 Secs:19.862984 Gb/s:12.973782
+Run:9 Secs:20.307141 Gb/s:12.690021
+Run:10 Secs:22.671158 Gb/s:11.366779
+
+End time: Thu Dec 25 15:07:46 UTC 2025
