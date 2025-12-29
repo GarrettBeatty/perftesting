@@ -1,5 +1,5 @@
 ﻿=== Running download-30GiB-1x.run.json with regular APIs ===
-Start time: 12/25/2025 16:45:45
+Start time: 12/29/2025 14:26:02
 
 
 
@@ -7,7 +7,7 @@ Workload Configuration:
 
 - MaxRepeatCount: 10
 
-- MaxRepeatSecs: 100000000
+- MaxRepeatSecs: 100000
 
 - FilesOnDisk: True
 
@@ -25,25 +25,25 @@ Total bytes per run: 32,212,254,720
 
 
 
-Run:1 Secs:322.541764 Gb/s:0.798960
+Run:1 Secs:415.953117 Gb/s:0.619536
 
-Run:2 Secs:322.267210 Gb/s:0.799641
+Run:2 Secs:387.785923 Gb/s:0.664537
 
-Run:3 Secs:323.068746 Gb/s:0.797657
+Run:3 Secs:363.130764 Gb/s:0.709656
 
-Run:4 Secs:322.255933 Gb/s:0.799669
+Run:4 Secs:339.031258 Gb/s:0.760101
 
-Run:5 Secs:322.392775 Gb/s:0.799329
+Run:5 Secs:322.566481 Gb/s:0.798899
 
-Run:6 Secs:322.228351 Gb/s:0.799737
+Run:6 Secs:335.044229 Gb/s:0.769146
 
-Run:7 Secs:322.240892 Gb/s:0.799706
+Run:7 Secs:418.371218 Gb/s:0.615955
 
-Run:8 Secs:322.354787 Gb/s:0.799424
+Run:8 Secs:422.799244 Gb/s:0.609504
 
-Run:9 Secs:322.292120 Gb/s:0.799579
+Run:9 Secs:359.356919 Gb/s:0.717109
 
-Run:10 Secs:322.287389 Gb/s:0.799591
+Run:10 Secs:339.894768 Gb/s:0.758170
 
 
-End time: 12/25/2025 17:39:44
+End time: 12/29/2025 15:28:15

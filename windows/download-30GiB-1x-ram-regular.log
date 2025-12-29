@@ -1,63 +1,49 @@
 ﻿=== Running download-30GiB-1x-ram.run.json with regular APIs ===
-Start time: 12/25/2025 17:39:44
-
-dotnet : 
-
-At C:\dev\repos\aws-crt-s3-benchmarks\runners\s3-benchrunner-dotnet\run-benchmarks.ps1:55 char:5
-
-+     dotnet run -c Release --project $ProjectPath -- sdk-dotnet-tm "$W ...
-
-+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
-
-    + FullyQualifiedErrorId : NativeCommandError
-
- 
-
-Error:
-
-- Message: JSON integer 10000000000 is too large or small for an Int32. Path 'maxRepeatSecs', line 7, position 32.
-
-- Stack trace:    at Newtonsoft.Json.JsonTextReader.ParseReadNumber(ReadType readType, Char firstChar, Int32 initialPosition)
-
-   at Newtonsoft.Json.JsonTextReader.ParseNumber(ReadType readType)
-
-   at Newtonsoft.Json.JsonTextReader.ReadNumberValue(ReadType readType)
-
-   at Newtonsoft.Json.JsonTextReader.ReadAsInt32()
-
-   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
-
-   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.PopulateObject(Object newObject, JsonReader reader, JsonObjectContract contract, 
-
-JsonProperty member, String id)
-
-   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateObject(JsonReader reader, Type objectType, JsonContract contract, 
-
-JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
-
-   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, 
-
-JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
-
-   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
-
-   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
-
-   at Newtonsoft.Json.JsonSerializer.Deserialize(JsonReader reader, Type objectType)
-
-   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
-
-   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
-
-   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
-
-   at S3BenchRunner.Program.<>c.<<Main>b__0_1>d.MoveNext() in 
-
-C:\dev\repos\aws-crt-s3-benchmarks\runners\s3-benchrunner-dotnet\S3BenchRunner\Program.cs:line 81
+Start time: 12/29/2025 15:28:15
 
 
 
+Workload Configuration:
 
-End time: 12/25/2025 17:39:47
+- MaxRepeatCount: 10
+
+- MaxRepeatSecs: 10000
+
+- FilesOnDisk: False
+
+- WithResponseApis: False
+
+
+
+Tasks:
+
+- Task: action=download, size=32,212,254,720 bytes, key=download/30GiB-1x/1
+
+
+
+Total bytes per run: 32,212,254,720
+
+
+
+Run:1 Secs:367.854684 Gb/s:0.700543
+
+Run:2 Secs:367.448473 Gb/s:0.701317
+
+Run:3 Secs:358.827784 Gb/s:0.718166
+
+Run:4 Secs:355.427933 Gb/s:0.725036
+
+Run:5 Secs:322.136430 Gb/s:0.799966
+
+Run:6 Secs:333.993206 Gb/s:0.771567
+
+Run:7 Secs:357.474981 Gb/s:0.720884
+
+Run:8 Secs:349.755652 Gb/s:0.736794
+
+Run:9 Secs:349.898976 Gb/s:0.736493
+
+Run:10 Secs:332.873357 Gb/s:0.774162
+
+
+End time: 12/29/2025 16:26:37
