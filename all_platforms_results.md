@@ -86,6 +86,90 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 | **Std Dev Throughput** | 0.03 | 1.05 |
 
 
+## NETCORE Platform Results
+
+| Test Type | File Size | Storage | Regular (Gb/s) | WithResp (Gb/s) | Difference | Faster API |
+|-----------|-----------|---------|----------------|-----------------|------------|------------|
+| download-30GiB ram | 30.0GiB | RAM | 0.78 | 3.90 | 80.0% | WithResponse |
+| download-30GiB | 30.0GiB | Disk | 0.75 | 0.57 | 31.1% | Regular |
+| download-5GiB ram | 5.0GiB | RAM | 0.80 | 4.35 | 81.7% | WithResponse |
+| download-5GiB | 5.0GiB | Disk | 0.74 | 0.62 | 20.9% | Regular |
+
+## Detailed Performance Breakdown - NETCORE
+
+### 30.0GiB Download to RAM
+
+| Metric | Regular APIs | WithResponse APIs | Comparison |
+|--------|--------------|-------------------|------------|
+| **Throughput (Gb/s)** | 0.78 | 3.90 | 0.20x |
+| **Average Time (s)** | 329.5 | 66.0 | 0.20x |
+
+#### Statistical Details
+
+| Statistic | Regular APIs | WithResponse APIs |
+|-----------|--------------|-------------------|
+| **Min Time (s)** | 322.13 | 64.23 |
+| **Max Time (s)** | 352.06 | 66.92 |
+| **Std Dev Time** | 10.51 | 0.82 |
+| **Min Throughput (Gb/s)** | 0.73 | 3.85 |
+| **Max Throughput (Gb/s)** | 0.80 | 4.01 |
+| **Std Dev Throughput** | 0.02 | 0.05 |
+
+### 30.0GiB Download to Disk
+
+| Metric | Regular APIs | WithResponse APIs | Comparison |
+|--------|--------------|-------------------|------------|
+| **Throughput (Gb/s)** | 0.75 | 0.57 | 1.31x |
+| **Average Time (s)** | 347.1 | 452.5 | 1.30x |
+
+#### Statistical Details
+
+| Statistic | Regular APIs | WithResponse APIs |
+|-----------|--------------|-------------------|
+| **Min Time (s)** | 322.26 | 443.20 |
+| **Max Time (s)** | 403.80 | 461.89 |
+| **Std Dev Time** | 28.97 | 13.22 |
+| **Min Throughput (Gb/s)** | 0.64 | 0.56 |
+| **Max Throughput (Gb/s)** | 0.80 | 0.58 |
+| **Std Dev Throughput** | 0.06 | 0.02 |
+
+### 5.0GiB Download to RAM
+
+| Metric | Regular APIs | WithResponse APIs | Comparison |
+|--------|--------------|-------------------|------------|
+| **Throughput (Gb/s)** | 0.80 | 4.35 | 0.18x |
+| **Average Time (s)** | 53.8 | 9.9 | 0.18x |
+
+#### Statistical Details
+
+| Statistic | Regular APIs | WithResponse APIs |
+|-----------|--------------|-------------------|
+| **Min Time (s)** | 53.69 | 8.91 |
+| **Max Time (s)** | 54.17 | 11.27 |
+| **Std Dev Time** | 0.20 | 0.68 |
+| **Min Throughput (Gb/s)** | 0.79 | 3.81 |
+| **Max Throughput (Gb/s)** | 0.80 | 4.82 |
+| **Std Dev Throughput** | 0.00 | 0.29 |
+
+### 5.0GiB Download to Disk
+
+| Metric | Regular APIs | WithResponse APIs | Comparison |
+|--------|--------------|-------------------|------------|
+| **Throughput (Gb/s)** | 0.74 | 0.62 | 1.21x |
+| **Average Time (s)** | 58.3 | 69.8 | 1.20x |
+
+#### Statistical Details
+
+| Statistic | Regular APIs | WithResponse APIs |
+|-----------|--------------|-------------------|
+| **Min Time (s)** | 53.80 | 69.01 |
+| **Max Time (s)** | 72.75 | 70.56 |
+| **Std Dev Time** | 6.10 | 0.58 |
+| **Min Throughput (Gb/s)** | 0.59 | 0.61 |
+| **Max Throughput (Gb/s)** | 0.80 | 0.62 |
+| **Std Dev Throughput** | 0.07 | 0.01 |
+
+
 ## WINDOWS Platform Results
 
 | Test Type | File Size | Storage | Regular (Gb/s) | WithResp (Gb/s) | Difference | Faster API |
