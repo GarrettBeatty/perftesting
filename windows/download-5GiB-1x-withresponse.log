@@ -1,5 +1,5 @@
 ﻿=== Running download-5GiB-1x.run.json with WithResponse APIs ===
-Start time: 12/25/2025 14:38:10
+Start time: 12/30/2025 14:25:04
 
 
 
@@ -25,21 +25,25 @@ Total bytes per run: 5,368,709,120
 
 
 
-Run:1 Secs:70.790261 Gb/s:0.606717
+Run:1 Secs:7.838663 Gb/s:5.479209
 
-Run:2 Secs:77.259018 Gb/s:0.555918
+Run:2 Secs:9.593901 Gb/s:4.476768
 
-Run:3 Secs:78.108106 Gb/s:0.549875
+Run:3 Secs:8.533800 Gb/s:5.032890
 
-Run:4 Secs:76.440877 Gb/s:0.561868
+Run:4 Secs:9.050005 Gb/s:4.745818
 
-Run:5 Secs:77.453333 Gb/s:0.554523
+Run:5 Secs:9.994081 Gb/s:4.297511
 
-Run:6 Secs:76.261703 Gb/s:0.563188
+Run:6 Secs:10.139421 Gb/s:4.235910
 
-Run:7 Secs:82.457991 Gb/s:0.520867
+Run:7 Secs:10.123748 Gb/s:4.242468
 
-Run:8 Secs:74.054799 Gb/s:0.579972
+Run:8 Secs:7.736384 Gb/s:5.551647
+
+Run:9 Secs:9.455852 Gb/s:4.542126
+
+Run:10 Secs:10.037238 Gb/s:4.279033
 
 
-End time: 12/25/2025 14:48:26
+End time: 12/30/2025 14:26:41

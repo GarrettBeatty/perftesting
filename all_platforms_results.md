@@ -91,9 +91,9 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 | Test Type | File Size | Storage | Regular (Gb/s) | WithResp (Gb/s) | Difference | Faster API |
 |-----------|-----------|---------|----------------|-----------------|------------|------------|
 | download-30GiB ram | 30.0GiB | RAM | 0.74 | 20.71 | 96.4% | WithResponse |
-| download-30GiB | 30.0GiB | Disk | 0.79 | 0.55 | 43.7% | Regular |
+| download-30GiB | 30.0GiB | Disk | 0.77 | 4.63 | 83.4% | WithResponse |
 | download-5GiB ram | 5.0GiB | RAM | 0.80 | 29.37 | 97.3% | WithResponse |
-| download-5GiB | 5.0GiB | Disk | 0.80 | 0.56 | 41.9% | Regular |
+| download-5GiB | 5.0GiB | Disk | 0.80 | 4.69 | 83.0% | WithResponse |
 
 ## Detailed Performance Breakdown - WINDOWS
 
@@ -119,19 +119,19 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.79 | 0.55 | 1.44x |
-| **Average Time (s)** | 326.5 | 469.1 | 1.44x |
+| **Throughput (Gb/s)** | 0.77 | 4.63 | 0.17x |
+| **Average Time (s)** | 336.9 | 55.7 | 0.17x |
 
 #### Statistical Details
 
 | Statistic | Regular APIs | WithResponse APIs |
 |-----------|--------------|-------------------|
-| **Min Time (s)** | 322.23 | 460.61 |
-| **Max Time (s)** | 343.75 | 474.05 |
-| **Std Dev Time** | 8.90 | 4.14 |
-| **Min Throughput (Gb/s)** | 0.75 | 0.54 |
-| **Max Throughput (Gb/s)** | 0.80 | 0.56 |
-| **Std Dev Throughput** | 0.02 | 0.00 |
+| **Min Time (s)** | 322.29 | 53.06 |
+| **Max Time (s)** | 355.31 | 57.18 |
+| **Std Dev Time** | 16.41 | 1.87 |
+| **Min Throughput (Gb/s)** | 0.73 | 4.51 |
+| **Max Throughput (Gb/s)** | 0.80 | 4.86 |
+| **Std Dev Throughput** | 0.04 | 0.16 |
 
 ### 5.0GiB Download to RAM
 
@@ -155,17 +155,17 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.80 | 0.56 | 1.42x |
-| **Average Time (s)** | 53.9 | 76.6 | 1.42x |
+| **Throughput (Gb/s)** | 0.80 | 4.69 | 0.17x |
+| **Average Time (s)** | 53.8 | 9.3 | 0.17x |
 
 #### Statistical Details
 
 | Statistic | Regular APIs | WithResponse APIs |
 |-----------|--------------|-------------------|
-| **Min Time (s)** | 53.79 | 70.79 |
-| **Max Time (s)** | 54.14 | 82.46 |
-| **Std Dev Time** | 0.10 | 3.34 |
-| **Min Throughput (Gb/s)** | 0.79 | 0.52 |
-| **Max Throughput (Gb/s)** | 0.80 | 0.61 |
-| **Std Dev Throughput** | 0.00 | 0.02 |
+| **Min Time (s)** | 53.79 | 7.74 |
+| **Max Time (s)** | 54.01 | 10.14 |
+| **Std Dev Time** | 0.07 | 0.93 |
+| **Min Throughput (Gb/s)** | 0.80 | 4.24 |
+| **Max Throughput (Gb/s)** | 0.80 | 5.55 |
+| **Std Dev Throughput** | 0.00 | 0.50 |
 
