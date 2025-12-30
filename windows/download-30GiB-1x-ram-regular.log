@@ -1,5 +1,5 @@
 ﻿=== Running download-30GiB-1x-ram.run.json with regular APIs ===
-Start time: 12/29/2025 15:28:15
+Start time: 12/29/2025 23:39:10
 
 
 
@@ -7,7 +7,7 @@ Workload Configuration:
 
 - MaxRepeatCount: 10
 
-- MaxRepeatSecs: 10000
+- MaxRepeatSecs: 100000
 
 - FilesOnDisk: False
 
@@ -25,25 +25,25 @@ Total bytes per run: 32,212,254,720
 
 
 
-Run:1 Secs:367.854684 Gb/s:0.700543
+Run:1 Secs:322.410921 Gb/s:0.799284
 
-Run:2 Secs:367.448473 Gb/s:0.701317
+Run:2 Secs:322.147339 Gb/s:0.799938
 
-Run:3 Secs:358.827784 Gb/s:0.718166
+Run:3 Secs:322.138303 Gb/s:0.799961
 
-Run:4 Secs:355.427933 Gb/s:0.725036
+Run:4 Secs:322.245652 Gb/s:0.799694
 
-Run:5 Secs:322.136430 Gb/s:0.799966
+Run:5 Secs:370.319084 Gb/s:0.695881
 
-Run:6 Secs:333.993206 Gb/s:0.771567
+Run:6 Secs:377.906561 Gb/s:0.681909
 
-Run:7 Secs:357.474981 Gb/s:0.720884
+Run:7 Secs:356.684689 Gb/s:0.722481
 
-Run:8 Secs:349.755652 Gb/s:0.736794
+Run:8 Secs:353.041898 Gb/s:0.729936
 
-Run:9 Secs:349.898976 Gb/s:0.736493
+Run:9 Secs:363.229128 Gb/s:0.709464
 
-Run:10 Secs:332.873357 Gb/s:0.774162
+Run:10 Secs:362.366671 Gb/s:0.711153
 
 
-End time: 12/29/2025 16:26:37
+End time: 12/30/2025 00:37:11

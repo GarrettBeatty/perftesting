@@ -1,5 +1,5 @@
 ﻿=== Running download-30GiB-1x.run.json with WithResponse APIs ===
-Start time: 12/29/2025 16:32:14
+Start time: 12/29/2025 22:20:42
 
 
 
@@ -25,25 +25,25 @@ Total bytes per run: 32,212,254,720
 
 
 
-Run:1 Secs:465.368639 Gb/s:0.553750
+Run:1 Secs:465.943822 Gb/s:0.553067
 
-Run:2 Secs:473.220532 Gb/s:0.544562
+Run:2 Secs:469.724042 Gb/s:0.548616
 
-Run:3 Secs:469.846037 Gb/s:0.548473
+Run:3 Secs:473.284134 Gb/s:0.544489
 
-Run:4 Secs:471.375400 Gb/s:0.546694
+Run:4 Secs:472.224426 Gb/s:0.545711
 
-Run:5 Secs:467.305719 Gb/s:0.551455
+Run:5 Secs:471.497652 Gb/s:0.546552
 
-Run:6 Secs:471.852235 Gb/s:0.546141
+Run:6 Secs:466.700791 Gb/s:0.552170
 
-Run:7 Secs:469.878265 Gb/s:0.548436
+Run:7 Secs:466.606100 Gb/s:0.552282
 
-Run:8 Secs:470.429546 Gb/s:0.547793
+Run:8 Secs:460.612745 Gb/s:0.559468
 
-Run:9 Secs:472.812542 Gb/s:0.545032
+Run:9 Secs:474.046458 Gb/s:0.543613
 
-Run:10 Secs:467.233377 Gb/s:0.551540
+Run:10 Secs:470.556134 Gb/s:0.547646
 
 
-End time: 12/29/2025 17:50:41
+End time: 12/29/2025 23:39:10

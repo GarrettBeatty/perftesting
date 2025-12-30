@@ -32,6 +32,7 @@ class TestResult:
     test_name: str
     file_size_bytes: int
     files_on_disk: bool
+    with_response_apis: bool
     max_repeat_count: int
     max_repeat_secs: int
     runs: List[TestRun]
@@ -62,6 +63,7 @@ class LogParser:
         self.workload_pattern = re.compile(r'- MaxRepeatCount: (\d+)')
         self.repeat_secs_pattern = re.compile(r'- MaxRepeatSecs: (\d+)')
         self.files_on_disk_pattern = re.compile(r'- FilesOnDisk: (True|False)')
+        self.with_response_pattern = re.compile(r'- WithResponseApis: (True|False)')
         self.task_pattern = re.compile(r'- Task: action=download, size=([\d,]+) bytes')
         self.run_pattern = re.compile(r'Run:(\d+) Secs:([\d.]+) Gb/s:([\d.]+)')
     
@@ -90,6 +92,7 @@ class LogParser:
             max_repeat_count = int(self.workload_pattern.search(content).group(1))
             max_repeat_secs = int(self.repeat_secs_pattern.search(content).group(1))
             files_on_disk = self.files_on_disk_pattern.search(content).group(1) == 'True'
+            with_response_apis = self.with_response_pattern.search(content).group(1) == 'True'
             
             # Parse file size (remove commas)
             size_match = self.task_pattern.search(content)
@@ -108,6 +111,7 @@ class LogParser:
                 test_name=test_name,
                 file_size_bytes=file_size_bytes,
                 files_on_disk=files_on_disk,
+                with_response_apis=with_response_apis,
                 max_repeat_count=max_repeat_count,
                 max_repeat_secs=max_repeat_secs,
                 runs=runs
@@ -141,46 +145,48 @@ class PerformanceAnalyzer:
                 print(f"Found {len(self.results[platform_name])} log files in {platform_name}/")
     
     def find_test_pairs(self, platform: str) -> List[Tuple[TestResult, TestResult]]:
-        """Find matching single vs multi-part test pairs"""
+        """Find matching regular vs WithResponse API test pairs"""
         if platform not in self.results:
             return []
         
         pairs = []
         tests = self.results[platform]
         
-        for single_test in tests:
-            if '-multi' not in single_test.test_name:
-                # Look for corresponding multi-part test
-                multi_name = single_test.test_name + '-multi'
-                multi_test = next(
-                    (t for t in tests if t.test_name == multi_name 
-                     and t.files_on_disk == single_test.files_on_disk 
-                     and t.file_size_bytes == single_test.file_size_bytes), 
+        for regular_test in tests:
+            if not regular_test.with_response_apis:
+                # Look for corresponding WithResponse test with same configuration
+                # Replace '-regular' suffix with '-withresponse'
+                withresponse_name = regular_test.test_name.replace('-regular', '-withresponse')
+                withresponse_test = next(
+                    (t for t in tests if t.test_name == withresponse_name 
+                     and t.files_on_disk == regular_test.files_on_disk 
+                     and t.file_size_bytes == regular_test.file_size_bytes
+                     and t.with_response_apis), 
                     None
                 )
-                if multi_test:
-                    pairs.append((single_test, multi_test))
+                if withresponse_test:
+                    pairs.append((regular_test, withresponse_test))
         
         return pairs
     
-    def calculate_improvement(self, single: TestResult, multi: TestResult) -> Dict[str, float]:
-        """Calculate performance improvement metrics"""
-        single_stats = single.get_stats()
-        multi_stats = multi.get_stats()
+    def calculate_improvement(self, regular: TestResult, withresponse: TestResult) -> Dict[str, float]:
+        """Calculate performance comparison metrics between regular and WithResponse APIs"""
+        regular_stats = regular.get_stats()
+        withresponse_stats = withresponse.get_stats()
         
-        # Calculate improvement ratios
-        time_improvement = single_stats['mean_time'] / multi_stats['mean_time']
-        throughput_improvement = multi_stats['mean_throughput'] / single_stats['mean_throughput']
+        # Calculate difference ratios (positive means regular is faster)
+        time_ratio = withresponse_stats['mean_time'] / regular_stats['mean_time']
+        throughput_ratio = regular_stats['mean_throughput'] / withresponse_stats['mean_throughput']
         
         return {
-            'time_improvement_ratio': time_improvement,
-            'throughput_improvement_ratio': throughput_improvement,
-            'time_reduction_percent': ((single_stats['mean_time'] - multi_stats['mean_time']) / single_stats['mean_time']) * 100,
-            'throughput_increase_percent': ((multi_stats['mean_throughput'] - single_stats['mean_throughput']) / single_stats['mean_throughput']) * 100,
-            'single_mean_time': single_stats['mean_time'],
-            'multi_mean_time': multi_stats['mean_time'],
-            'single_mean_throughput': single_stats['mean_throughput'],
-            'multi_mean_throughput': multi_stats['mean_throughput']
+            'time_ratio': time_ratio,
+            'throughput_ratio': throughput_ratio,
+            'time_difference_percent': ((withresponse_stats['mean_time'] - regular_stats['mean_time']) / regular_stats['mean_time']) * 100,
+            'throughput_difference_percent': ((regular_stats['mean_throughput'] - withresponse_stats['mean_throughput']) / withresponse_stats['mean_throughput']) * 100,
+            'regular_mean_time': regular_stats['mean_time'],
+            'withresponse_mean_time': withresponse_stats['mean_time'],
+            'regular_mean_throughput': regular_stats['mean_throughput'],
+            'withresponse_mean_throughput': withresponse_stats['mean_throughput']
         }
     
     def format_file_size(self, size_bytes: int) -> str:
@@ -202,6 +208,7 @@ class PerformanceAnalyzer:
         
         report_lines.append("=" * 80)
         report_lines.append("PERFORMANCE ANALYSIS REPORT")
+        report_lines.append("Regular APIs vs WithResponse APIs Comparison")
         report_lines.append("=" * 80)
         
         for plat in platforms_to_process:
@@ -212,47 +219,59 @@ class PerformanceAnalyzer:
             
             pairs = self.find_test_pairs(plat)
             if not pairs:
-                report_lines.append(f"No matching single/multi-part test pairs found for {plat}")
+                report_lines.append(f"No matching regular/withresponse test pairs found for {plat}")
                 continue
             
             # Summary table header
             report_lines.append("\nSUMMARY TABLE:")
-            report_lines.append("-" * 120)
-            report_lines.append(f"{'Test Type':<25} {'File Size':<12} {'Storage':<8} {'Single (Gb/s)':<15} {'Multi (Gb/s)':<15} {'Improvement':<15} {'Time Reduction':<15}")
-            report_lines.append("-" * 120)
+            report_lines.append("-" * 130)
+            report_lines.append(f"{'Test Type':<30} {'File Size':<12} {'Storage':<8} {'Regular (Gb/s)':<16} {'WithResp (Gb/s)':<16} {'Difference':<15} {'Faster API':<15}")
+            report_lines.append("-" * 130)
             
-            for single, multi in pairs:
-                improvement = self.calculate_improvement(single, multi)
-                storage_type = "Disk" if single.files_on_disk else "RAM"
-                file_size = self.format_file_size(single.file_size_bytes)
+            for regular, withresponse in pairs:
+                comparison = self.calculate_improvement(regular, withresponse)
+                storage_type = "Disk" if regular.files_on_disk else "RAM"
+                file_size = self.format_file_size(regular.file_size_bytes)
                 
-                # Extract base test name (remove size and single/multi indicators)
-                base_name = single.test_name.replace('-1x', '').replace('GiB-', 'GiB ')
+                # Extract base test name
+                base_name = regular.test_name.replace('-regular', '').replace('-1x', '').replace('GiB-', 'GiB ')
                 if '-ram' in base_name:
                     base_name = base_name.replace('-ram', ' (RAM)')
                 
+                # Determine which is faster
+                if comparison['regular_mean_throughput'] > comparison['withresponse_mean_throughput']:
+                    faster = "Regular"
+                    diff_pct = comparison['throughput_difference_percent']
+                else:
+                    faster = "WithResponse"
+                    diff_pct = -comparison['throughput_difference_percent']
+                
                 report_lines.append(
-                    f"{base_name:<25} {file_size:<12} {storage_type:<8} "
-                    f"{improvement['single_mean_throughput']:<15.2f} "
-                    f"{improvement['multi_mean_throughput']:<15.2f} "
-                    f"{improvement['throughput_improvement_ratio']:<15.1f}x "
-                    f"{improvement['time_reduction_percent']:<15.1f}%"
+                    f"{base_name:<30} {file_size:<12} {storage_type:<8} "
+                    f"{comparison['regular_mean_throughput']:<16.2f} "
+                    f"{comparison['withresponse_mean_throughput']:<16.2f} "
+                    f"{abs(diff_pct):<15.1f}% "
+                    f"{faster:<15}"
                 )
             
             # Detailed breakdown
             report_lines.append(f"\nDETAILED BREAKDOWN for {plat.upper()}:")
             report_lines.append("=" * 60)
             
-            for single, multi in pairs:
-                improvement = self.calculate_improvement(single, multi)
-                storage_type = "to Disk" if single.files_on_disk else "to RAM"
-                file_size = self.format_file_size(single.file_size_bytes)
+            for regular, withresponse in pairs:
+                comparison = self.calculate_improvement(regular, withresponse)
+                storage_type = "to Disk" if regular.files_on_disk else "to RAM"
+                file_size = self.format_file_size(regular.file_size_bytes)
                 
                 report_lines.append(f"\n📊 {file_size} Download {storage_type}")
                 report_lines.append("-" * 40)
-                report_lines.append(f"Single-part:  {improvement['single_mean_throughput']:8.2f} Gb/s (avg {improvement['single_mean_time']:6.1f}s)")
-                report_lines.append(f"Multi-part:   {improvement['multi_mean_throughput']:8.2f} Gb/s (avg {improvement['multi_mean_time']:6.1f}s)")
-                report_lines.append(f"Improvement:  {improvement['throughput_improvement_ratio']:8.1f}x faster ({improvement['time_reduction_percent']:5.1f}% time reduction)")
+                report_lines.append(f"Regular APIs:     {comparison['regular_mean_throughput']:8.2f} Gb/s (avg {comparison['regular_mean_time']:6.1f}s)")
+                report_lines.append(f"WithResponse APIs: {comparison['withresponse_mean_throughput']:8.2f} Gb/s (avg {comparison['withresponse_mean_time']:6.1f}s)")
+                
+                if comparison['regular_mean_throughput'] > comparison['withresponse_mean_throughput']:
+                    report_lines.append(f"Result:           Regular is {comparison['throughput_ratio']:.1f}x faster ({comparison['throughput_difference_percent']:.1f}% better throughput)")
+                else:
+                    report_lines.append(f"Result:           WithResponse is {1/comparison['throughput_ratio']:.1f}x faster ({-comparison['throughput_difference_percent']:.1f}% better throughput)")
         
         return "\n".join(report_lines)
     
@@ -263,30 +282,37 @@ class PerformanceAnalyzer:
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
             fieldnames = [
                 'Platform', 'Test_Type', 'File_Size_GB', 'Storage_Type', 
-                'Single_Throughput_Gbps', 'Multi_Throughput_Gbps', 
-                'Improvement_Ratio', 'Time_Reduction_Percent',
-                'Single_Mean_Time', 'Multi_Mean_Time'
+                'Regular_Throughput_Gbps', 'WithResponse_Throughput_Gbps', 
+                'Throughput_Ratio', 'Throughput_Difference_Percent',
+                'Regular_Mean_Time', 'WithResponse_Mean_Time', 'Faster_API'
             ]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             
             for plat in platforms_to_process:
                 pairs = self.find_test_pairs(plat)
-                for single, multi in pairs:
-                    improvement = self.calculate_improvement(single, multi)
-                    storage_type = "Disk" if single.files_on_disk else "RAM"
+                for regular, withresponse in pairs:
+                    comparison = self.calculate_improvement(regular, withresponse)
+                    storage_type = "Disk" if regular.files_on_disk else "RAM"
+                    
+                    # Determine which is faster
+                    if comparison['regular_mean_throughput'] > comparison['withresponse_mean_throughput']:
+                        faster = "Regular"
+                    else:
+                        faster = "WithResponse"
                     
                     writer.writerow({
                         'Platform': plat,
-                        'Test_Type': single.test_name.replace('-1x', '').replace('-ram', '_RAM'),
-                        'File_Size_GB': single.file_size_bytes / (1024**3),
+                        'Test_Type': regular.test_name.replace('-regular', '').replace('-1x', '').replace('-ram', '_RAM'),
+                        'File_Size_GB': regular.file_size_bytes / (1024**3),
                         'Storage_Type': storage_type,
-                        'Single_Throughput_Gbps': improvement['single_mean_throughput'],
-                        'Multi_Throughput_Gbps': improvement['multi_mean_throughput'],
-                        'Improvement_Ratio': improvement['throughput_improvement_ratio'],
-                        'Time_Reduction_Percent': improvement['time_reduction_percent'],
-                        'Single_Mean_Time': improvement['single_mean_time'],
-                        'Multi_Mean_Time': improvement['multi_mean_time']
+                        'Regular_Throughput_Gbps': comparison['regular_mean_throughput'],
+                        'WithResponse_Throughput_Gbps': comparison['withresponse_mean_throughput'],
+                        'Throughput_Ratio': comparison['throughput_ratio'],
+                        'Throughput_Difference_Percent': comparison['throughput_difference_percent'],
+                        'Regular_Mean_Time': comparison['regular_mean_time'],
+                        'WithResponse_Mean_Time': comparison['withresponse_mean_time'],
+                        'Faster_API': faster
                     })
         
         print(f"CSV report exported to: {filename}")
@@ -301,36 +327,43 @@ class PerformanceAnalyzer:
                 'test_pairs': [],
                 'summary': {
                     'total_pairs': 0,
-                    'avg_improvement': 0
+                    'avg_throughput_ratio': 0
                 }
             }
             
             pairs = self.find_test_pairs(plat)
-            improvements = []
+            ratios = []
             
-            for single, multi in pairs:
-                improvement = self.calculate_improvement(single, multi)
-                improvements.append(improvement['throughput_improvement_ratio'])
+            for regular, withresponse in pairs:
+                comparison = self.calculate_improvement(regular, withresponse)
+                ratios.append(comparison['throughput_ratio'])
+                
+                # Determine which is faster
+                if comparison['regular_mean_throughput'] > comparison['withresponse_mean_throughput']:
+                    faster = "Regular"
+                else:
+                    faster = "WithResponse"
                 
                 pair_data = {
-                    'test_name': single.test_name,
-                    'file_size_bytes': single.file_size_bytes,
-                    'file_size_formatted': self.format_file_size(single.file_size_bytes),
-                    'storage_type': "disk" if single.files_on_disk else "ram",
-                    'single_part': {
-                        'stats': single.get_stats(),
-                        'runs': [{'run': r.run_number, 'time': r.seconds, 'throughput': r.gbps} for r in single.runs]
+                    'test_name': regular.test_name,
+                    'file_size_bytes': regular.file_size_bytes,
+                    'file_size_formatted': self.format_file_size(regular.file_size_bytes),
+                    'storage_type': "disk" if regular.files_on_disk else "ram",
+                    'regular_apis': {
+                        'stats': regular.get_stats(),
+                        'runs': [{'run': r.run_number, 'time': r.seconds, 'throughput': r.gbps} for r in regular.runs]
                     },
-                    'multi_part': {
-                        'stats': multi.get_stats(),
-                        'runs': [{'run': r.run_number, 'time': r.seconds, 'throughput': r.gbps} for r in multi.runs]
+                    'withresponse_apis': {
+                        'stats': withresponse.get_stats(),
+                        'runs': [{'run': r.run_number, 'time': r.seconds, 'throughput': r.gbps} for r in withresponse.runs]
                     },
-                    'improvement_metrics': improvement
+                    'comparison_metrics': comparison,
+                    'faster_api': faster
                 }
                 json_data[plat]['test_pairs'].append(pair_data)
             
             json_data[plat]['summary']['total_pairs'] = len(pairs)
-            json_data[plat]['summary']['avg_improvement'] = mean(improvements) if improvements else 0
+            json_data[plat]['summary']['avg_throughput_ratio'] = mean(ratios) if ratios else 0
         
         with open(filename, 'w', encoding='utf-8') as f:
             json.dump(json_data, f, indent=2)
@@ -341,30 +374,38 @@ class PerformanceAnalyzer:
         """Generate a markdown summary table for a specific platform"""
         pairs = self.find_test_pairs(platform)
         if not pairs:
-            return f"No matching single/multi-part test pairs found for {platform}"
+            return f"No matching regular/withresponse test pairs found for {platform}"
         
         markdown_lines = []
         markdown_lines.append(f"## {platform.upper()} Platform Results")
         markdown_lines.append("")
-        markdown_lines.append("| Test Type | File Size | Storage | Single (Gb/s) | Multi (Gb/s) | Improvement | Time Reduction |")
-        markdown_lines.append("|-----------|-----------|---------|---------------|--------------|-------------|----------------|")
+        markdown_lines.append("| Test Type | File Size | Storage | Regular (Gb/s) | WithResp (Gb/s) | Difference | Faster API |")
+        markdown_lines.append("|-----------|-----------|---------|----------------|-----------------|------------|------------|")
         
-        for single, multi in pairs:
-            improvement = self.calculate_improvement(single, multi)
-            storage_type = "Disk" if single.files_on_disk else "RAM"
-            file_size = self.format_file_size(single.file_size_bytes)
+        for regular, withresponse in pairs:
+            comparison = self.calculate_improvement(regular, withresponse)
+            storage_type = "Disk" if regular.files_on_disk else "RAM"
+            file_size = self.format_file_size(regular.file_size_bytes)
             
             # Extract base test name
-            base_name = single.test_name.replace('-1x', '').replace('GiB-', 'GiB ')
+            base_name = regular.test_name.replace('-regular', '').replace('-1x', '').replace('GiB-', 'GiB ')
             if '-ram' in base_name:
                 base_name = base_name.replace('-ram', ' (RAM)')
             
+            # Determine which is faster
+            if comparison['regular_mean_throughput'] > comparison['withresponse_mean_throughput']:
+                faster = "Regular"
+                diff_pct = comparison['throughput_difference_percent']
+            else:
+                faster = "WithResponse"
+                diff_pct = -comparison['throughput_difference_percent']
+            
             markdown_lines.append(
                 f"| {base_name} | {file_size} | {storage_type} | "
-                f"{improvement['single_mean_throughput']:.2f} | "
-                f"{improvement['multi_mean_throughput']:.2f} | "
-                f"{improvement['throughput_improvement_ratio']:.1f}x | "
-                f"{improvement['time_reduction_percent']:.1f}% |"
+                f"{comparison['regular_mean_throughput']:.2f} | "
+                f"{comparison['withresponse_mean_throughput']:.2f} | "
+                f"{abs(diff_pct):.1f}% | "
+                f"{faster} |"
             )
         
         return "\n".join(markdown_lines)
@@ -373,39 +414,39 @@ class PerformanceAnalyzer:
         """Generate a markdown detailed breakdown table for a specific platform"""
         pairs = self.find_test_pairs(platform)
         if not pairs:
-            return f"No matching single/multi-part test pairs found for {platform}"
+            return f"No matching regular/withresponse test pairs found for {platform}"
         
         markdown_lines = []
         markdown_lines.append(f"## Detailed Performance Breakdown - {platform.upper()}")
         markdown_lines.append("")
         
-        for single, multi in pairs:
-            improvement = self.calculate_improvement(single, multi)
-            storage_type = "to Disk" if single.files_on_disk else "to RAM"
-            file_size = self.format_file_size(single.file_size_bytes)
+        for regular, withresponse in pairs:
+            comparison = self.calculate_improvement(regular, withresponse)
+            storage_type = "to Disk" if regular.files_on_disk else "to RAM"
+            file_size = self.format_file_size(regular.file_size_bytes)
             
             markdown_lines.append(f"### {file_size} Download {storage_type}")
             markdown_lines.append("")
-            markdown_lines.append("| Metric | Single-part | Multi-part | Improvement |")
-            markdown_lines.append("|--------|-------------|------------|-------------|")
-            markdown_lines.append(f"| **Throughput (Gb/s)** | {improvement['single_mean_throughput']:.2f} | {improvement['multi_mean_throughput']:.2f} | {improvement['throughput_improvement_ratio']:.1f}x |")
-            markdown_lines.append(f"| **Average Time (s)** | {improvement['single_mean_time']:.1f} | {improvement['multi_mean_time']:.1f} | {improvement['time_reduction_percent']:.1f}% reduction |")
+            markdown_lines.append("| Metric | Regular APIs | WithResponse APIs | Comparison |")
+            markdown_lines.append("|--------|--------------|-------------------|------------|")
+            markdown_lines.append(f"| **Throughput (Gb/s)** | {comparison['regular_mean_throughput']:.2f} | {comparison['withresponse_mean_throughput']:.2f} | {comparison['throughput_ratio']:.2f}x |")
+            markdown_lines.append(f"| **Average Time (s)** | {comparison['regular_mean_time']:.1f} | {comparison['withresponse_mean_time']:.1f} | {comparison['time_ratio']:.2f}x |")
             
             # Add statistical details
-            single_stats = single.get_stats()
-            multi_stats = multi.get_stats()
+            regular_stats = regular.get_stats()
+            withresponse_stats = withresponse.get_stats()
             
             markdown_lines.append("")
             markdown_lines.append("#### Statistical Details")
             markdown_lines.append("")
-            markdown_lines.append("| Statistic | Single-part | Multi-part |")
-            markdown_lines.append("|-----------|-------------|------------|")
-            markdown_lines.append(f"| **Min Time (s)** | {single_stats['min_time']:.2f} | {multi_stats['min_time']:.2f} |")
-            markdown_lines.append(f"| **Max Time (s)** | {single_stats['max_time']:.2f} | {multi_stats['max_time']:.2f} |")
-            markdown_lines.append(f"| **Std Dev Time** | {single_stats['std_time']:.2f} | {multi_stats['std_time']:.2f} |")
-            markdown_lines.append(f"| **Min Throughput (Gb/s)** | {single_stats['min_throughput']:.2f} | {multi_stats['min_throughput']:.2f} |")
-            markdown_lines.append(f"| **Max Throughput (Gb/s)** | {single_stats['max_throughput']:.2f} | {multi_stats['max_throughput']:.2f} |")
-            markdown_lines.append(f"| **Std Dev Throughput** | {single_stats['std_throughput']:.2f} | {multi_stats['std_throughput']:.2f} |")
+            markdown_lines.append("| Statistic | Regular APIs | WithResponse APIs |")
+            markdown_lines.append("|-----------|--------------|-------------------|")
+            markdown_lines.append(f"| **Min Time (s)** | {regular_stats['min_time']:.2f} | {withresponse_stats['min_time']:.2f} |")
+            markdown_lines.append(f"| **Max Time (s)** | {regular_stats['max_time']:.2f} | {withresponse_stats['max_time']:.2f} |")
+            markdown_lines.append(f"| **Std Dev Time** | {regular_stats['std_time']:.2f} | {withresponse_stats['std_time']:.2f} |")
+            markdown_lines.append(f"| **Min Throughput (Gb/s)** | {regular_stats['min_throughput']:.2f} | {withresponse_stats['min_throughput']:.2f} |")
+            markdown_lines.append(f"| **Max Throughput (Gb/s)** | {regular_stats['max_throughput']:.2f} | {withresponse_stats['max_throughput']:.2f} |")
+            markdown_lines.append(f"| **Std Dev Throughput** | {regular_stats['std_throughput']:.2f} | {withresponse_stats['std_throughput']:.2f} |")
             markdown_lines.append("")
         
         return "\n".join(markdown_lines)
@@ -420,7 +461,7 @@ class PerformanceAnalyzer:
         
         markdown_lines.append("# Performance Analysis Report")
         markdown_lines.append("")
-        markdown_lines.append("This report compares single-part vs multi-part download performance across different platforms.")
+        markdown_lines.append("This report compares Regular APIs vs WithResponse APIs download performance across different platforms.")
         markdown_lines.append("")
         
         for plat in platforms_to_process:
@@ -452,7 +493,7 @@ class PerformanceAnalyzer:
 def main():
     """Main function with command line interface"""
     parser = argparse.ArgumentParser(
-        description="Analyze performance logs comparing single vs multi-part downloads",
+        description="Analyze performance logs comparing Regular APIs vs WithResponse APIs",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
