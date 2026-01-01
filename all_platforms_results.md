@@ -8,26 +8,26 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Platform | File Size | Storage | Regular (Gb/s) | WithResp (Gb/s) | Difference | Faster API |
 |----------|-----------|---------|----------------|-----------------|------------|------------|
-| linux_netstandard | 30.0GiB | RAM | 0.80 | 11.78 | 93.2% | WithResponse |
-| linux_netstandard | 30.0GiB | Disk | 0.79 | 11.82 | 93.3% | WithResponse |
-| linux_netstandard | 5.0GiB | RAM | 0.80 | 16.25 | 95.1% | WithResponse |
-| linux_netstandard | 5.0GiB | Disk | 0.79 | 12.25 | 93.6% | WithResponse |
-| windows_netframework | 100.0MiB | RAM | 0.77 | 4.08 | 81.1% | WithResponse |
-| windows_netframework | 100.0MiB | Disk | 0.70 | 0.52 | 36.6% | Regular |
-| windows_netframework | 1.0GiB | RAM | 0.80 | 4.86 | 83.6% | WithResponse |
-| windows_netframework | 1.0GiB | Disk | 0.79 | 0.58 | 36.9% | Regular |
-| windows_netframework | 30.0GiB | RAM | 0.80 | 4.03 | 80.2% | WithResponse |
-| windows_netframework | 30.0GiB | Disk | 0.79 | 0.34 | 129.4% | Regular |
-| windows_netframework | 5.0GiB | RAM | 0.79 | 4.41 | 82.1% | WithResponse |
-| windows_netframework | 5.0GiB | Disk | 0.80 | 0.50 | 60.4% | Regular |
-| windows_netstandard | 100.0MiB | RAM | 0.78 | 6.06 | 87.0% | WithResponse |
-| windows_netstandard | 100.0MiB | Disk | 0.70 | 3.60 | 80.4% | WithResponse |
-| windows_netstandard | 1.0GiB | RAM | 0.80 | 12.18 | 93.4% | WithResponse |
-| windows_netstandard | 1.0GiB | Disk | 0.79 | 8.27 | 90.5% | WithResponse |
-| windows_netstandard | 30.0GiB | RAM | 0.80 | 19.88 | 96.0% | WithResponse |
-| windows_netstandard | 30.0GiB | Disk | 0.78 | 5.13 | 84.7% | WithResponse |
-| windows_netstandard | 5.0GiB | RAM | 0.80 | 24.13 | 96.7% | WithResponse |
-| windows_netstandard | 5.0GiB | Disk | 0.79 | 5.83 | 86.5% | WithResponse |
+| linux_netstandard | 30.0GiB | RAM | 0.80 | 11.78 | 1373.5% | WithResponse |
+| linux_netstandard | 30.0GiB | Disk | 0.79 | 11.82 | 1400.3% | WithResponse |
+| linux_netstandard | 5.0GiB | RAM | 0.80 | 16.25 | 1932.0% | WithResponse |
+| linux_netstandard | 5.0GiB | Disk | 0.79 | 12.25 | 1451.1% | WithResponse |
+| windows_netframework | 100.0MiB | RAM | 0.77 | 4.08 | 427.9% | WithResponse |
+| windows_netframework | 100.0MiB | Disk | 0.70 | 0.52 | 26.8% | Regular |
+| windows_netframework | 1.0GiB | RAM | 0.80 | 4.86 | 509.8% | WithResponse |
+| windows_netframework | 1.0GiB | Disk | 0.79 | 0.58 | 26.9% | Regular |
+| windows_netframework | 30.0GiB | RAM | 0.80 | 4.03 | 404.2% | WithResponse |
+| windows_netframework | 30.0GiB | Disk | 0.79 | 0.34 | 56.4% | Regular |
+| windows_netframework | 5.0GiB | RAM | 0.79 | 4.41 | 459.0% | WithResponse |
+| windows_netframework | 5.0GiB | Disk | 0.80 | 0.50 | 37.7% | Regular |
+| windows_netstandard | 100.0MiB | RAM | 0.78 | 6.06 | 671.7% | WithResponse |
+| windows_netstandard | 100.0MiB | Disk | 0.70 | 3.60 | 411.1% | WithResponse |
+| windows_netstandard | 1.0GiB | RAM | 0.80 | 12.18 | 1426.1% | WithResponse |
+| windows_netstandard | 1.0GiB | Disk | 0.79 | 8.27 | 952.9% | WithResponse |
+| windows_netstandard | 30.0GiB | RAM | 0.80 | 19.88 | 2385.3% | WithResponse |
+| windows_netstandard | 30.0GiB | Disk | 0.78 | 5.13 | 555.4% | WithResponse |
+| windows_netstandard | 5.0GiB | RAM | 0.80 | 24.13 | 2917.9% | WithResponse |
+| windows_netstandard | 5.0GiB | Disk | 0.79 | 5.83 | 641.1% | WithResponse |
 
 ### Key Insights
 
@@ -69,10 +69,10 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Test Type | File Size | Storage | Regular (Gb/s) | WithResp (Gb/s) | Difference | Faster API |
 |-----------|-----------|---------|----------------|-----------------|------------|------------|
-| download-30GiB ram | 30.0GiB | RAM | 0.80 | 11.78 | 93.2% | WithResponse |
-| download-30GiB | 30.0GiB | Disk | 0.79 | 11.82 | 93.3% | WithResponse |
-| download-5GiB ram | 5.0GiB | RAM | 0.80 | 16.25 | 95.1% | WithResponse |
-| download-5GiB | 5.0GiB | Disk | 0.79 | 12.25 | 93.6% | WithResponse |
+| download-30GiB ram | 30.0GiB | RAM | 0.80 | 11.78 | 1373.5% | WithResponse |
+| download-30GiB | 30.0GiB | Disk | 0.79 | 11.82 | 1400.3% | WithResponse |
+| download-5GiB ram | 5.0GiB | RAM | 0.80 | 16.25 | 1932.0% | WithResponse |
+| download-5GiB | 5.0GiB | Disk | 0.79 | 12.25 | 1451.1% | WithResponse |
 
 ## Detailed Performance Breakdown - LINUX_NETSTANDARD
 
@@ -80,8 +80,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.80 | 11.78 | 0.07x |
-| **Average Time (s)** | 322.2 | 22.1 | 0.07x |
+| **Throughput (Gb/s)** | 0.80 | 11.78 | 14.73x |
+| **Average Time (s)** | 322.2 | 22.1 | 14.55x |
 
 #### Statistical Details
 
@@ -98,8 +98,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.79 | 11.82 | 0.07x |
-| **Average Time (s)** | 327.5 | 21.8 | 0.07x |
+| **Throughput (Gb/s)** | 0.79 | 11.82 | 15.00x |
+| **Average Time (s)** | 327.5 | 21.8 | 15.02x |
 
 #### Statistical Details
 
@@ -116,8 +116,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.80 | 16.25 | 0.05x |
-| **Average Time (s)** | 53.7 | 2.9 | 0.05x |
+| **Throughput (Gb/s)** | 0.80 | 16.25 | 20.32x |
+| **Average Time (s)** | 53.7 | 2.9 | 18.66x |
 
 #### Statistical Details
 
@@ -134,8 +134,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.79 | 12.25 | 0.06x |
-| **Average Time (s)** | 54.4 | 3.5 | 0.06x |
+| **Throughput (Gb/s)** | 0.79 | 12.25 | 15.51x |
+| **Average Time (s)** | 54.4 | 3.5 | 15.40x |
 
 #### Statistical Details
 
@@ -153,14 +153,14 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Test Type | File Size | Storage | Regular (Gb/s) | WithResp (Gb/s) | Difference | Faster API |
 |-----------|-----------|---------|----------------|-----------------|------------|------------|
-| download-100MiB (RAM) | 100.0MiB | RAM | 0.77 | 4.08 | 81.1% | WithResponse |
-| download-100MiB | 100.0MiB | Disk | 0.70 | 0.52 | 36.6% | Regular |
-| download-1GiB ram | 1.0GiB | RAM | 0.80 | 4.86 | 83.6% | WithResponse |
-| download-1GiB | 1.0GiB | Disk | 0.79 | 0.58 | 36.9% | Regular |
-| download-30GiB ram | 30.0GiB | RAM | 0.80 | 4.03 | 80.2% | WithResponse |
-| download-30GiB | 30.0GiB | Disk | 0.79 | 0.34 | 129.4% | Regular |
-| download-5GiB ram | 5.0GiB | RAM | 0.79 | 4.41 | 82.1% | WithResponse |
-| download-5GiB | 5.0GiB | Disk | 0.80 | 0.50 | 60.4% | Regular |
+| download-100MiB (RAM) | 100.0MiB | RAM | 0.77 | 4.08 | 427.9% | WithResponse |
+| download-100MiB | 100.0MiB | Disk | 0.70 | 0.52 | 26.8% | Regular |
+| download-1GiB ram | 1.0GiB | RAM | 0.80 | 4.86 | 509.8% | WithResponse |
+| download-1GiB | 1.0GiB | Disk | 0.79 | 0.58 | 26.9% | Regular |
+| download-30GiB ram | 30.0GiB | RAM | 0.80 | 4.03 | 404.2% | WithResponse |
+| download-30GiB | 30.0GiB | Disk | 0.79 | 0.34 | 56.4% | Regular |
+| download-5GiB ram | 5.0GiB | RAM | 0.79 | 4.41 | 459.0% | WithResponse |
+| download-5GiB | 5.0GiB | Disk | 0.80 | 0.50 | 37.7% | Regular |
 
 ## Detailed Performance Breakdown - WINDOWS_NETFRAMEWORK
 
@@ -168,8 +168,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.77 | 4.08 | 0.19x |
-| **Average Time (s)** | 1.1 | 0.2 | 0.22x |
+| **Throughput (Gb/s)** | 0.77 | 4.08 | 5.28x |
+| **Average Time (s)** | 1.1 | 0.2 | 4.46x |
 
 #### Statistical Details
 
@@ -186,8 +186,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.70 | 0.52 | 1.37x |
-| **Average Time (s)** | 1.2 | 1.6 | 1.36x |
+| **Throughput (Gb/s)** | 0.70 | 0.52 | 0.73x |
+| **Average Time (s)** | 1.2 | 1.6 | 0.73x |
 
 #### Statistical Details
 
@@ -204,8 +204,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.80 | 4.86 | 0.16x |
-| **Average Time (s)** | 10.8 | 1.8 | 0.16x |
+| **Throughput (Gb/s)** | 0.80 | 4.86 | 6.10x |
+| **Average Time (s)** | 10.8 | 1.8 | 6.06x |
 
 #### Statistical Details
 
@@ -222,8 +222,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.79 | 0.58 | 1.37x |
-| **Average Time (s)** | 10.9 | 15.0 | 1.38x |
+| **Throughput (Gb/s)** | 0.79 | 0.58 | 0.73x |
+| **Average Time (s)** | 10.9 | 15.0 | 0.72x |
 
 #### Statistical Details
 
@@ -240,8 +240,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.80 | 4.03 | 0.20x |
-| **Average Time (s)** | 322.3 | 63.9 | 0.20x |
+| **Throughput (Gb/s)** | 0.80 | 4.03 | 5.04x |
+| **Average Time (s)** | 322.3 | 63.9 | 5.04x |
 
 #### Statistical Details
 
@@ -258,8 +258,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.79 | 0.34 | 2.29x |
-| **Average Time (s)** | 325.7 | 926.2 | 2.84x |
+| **Throughput (Gb/s)** | 0.79 | 0.34 | 0.44x |
+| **Average Time (s)** | 325.7 | 926.2 | 0.35x |
 
 #### Statistical Details
 
@@ -276,8 +276,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.79 | 4.41 | 0.18x |
-| **Average Time (s)** | 54.4 | 9.7 | 0.18x |
+| **Throughput (Gb/s)** | 0.79 | 4.41 | 5.59x |
+| **Average Time (s)** | 54.4 | 9.7 | 5.59x |
 
 #### Statistical Details
 
@@ -294,8 +294,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.80 | 0.50 | 1.60x |
-| **Average Time (s)** | 53.8 | 87.6 | 1.63x |
+| **Throughput (Gb/s)** | 0.80 | 0.50 | 0.62x |
+| **Average Time (s)** | 53.8 | 87.6 | 0.61x |
 
 #### Statistical Details
 
@@ -313,14 +313,14 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Test Type | File Size | Storage | Regular (Gb/s) | WithResp (Gb/s) | Difference | Faster API |
 |-----------|-----------|---------|----------------|-----------------|------------|------------|
-| download-100MiB (RAM) | 100.0MiB | RAM | 0.78 | 6.06 | 87.0% | WithResponse |
-| download-100MiB | 100.0MiB | Disk | 0.70 | 3.60 | 80.4% | WithResponse |
-| download-1GiB ram | 1.0GiB | RAM | 0.80 | 12.18 | 93.4% | WithResponse |
-| download-1GiB | 1.0GiB | Disk | 0.79 | 8.27 | 90.5% | WithResponse |
-| download-30GiB ram | 30.0GiB | RAM | 0.80 | 19.88 | 96.0% | WithResponse |
-| download-30GiB | 30.0GiB | Disk | 0.78 | 5.13 | 84.7% | WithResponse |
-| download-5GiB ram | 5.0GiB | RAM | 0.80 | 24.13 | 96.7% | WithResponse |
-| download-5GiB | 5.0GiB | Disk | 0.79 | 5.83 | 86.5% | WithResponse |
+| download-100MiB (RAM) | 100.0MiB | RAM | 0.78 | 6.06 | 671.7% | WithResponse |
+| download-100MiB | 100.0MiB | Disk | 0.70 | 3.60 | 411.1% | WithResponse |
+| download-1GiB ram | 1.0GiB | RAM | 0.80 | 12.18 | 1426.1% | WithResponse |
+| download-1GiB | 1.0GiB | Disk | 0.79 | 8.27 | 952.9% | WithResponse |
+| download-30GiB ram | 30.0GiB | RAM | 0.80 | 19.88 | 2385.3% | WithResponse |
+| download-30GiB | 30.0GiB | Disk | 0.78 | 5.13 | 555.4% | WithResponse |
+| download-5GiB ram | 5.0GiB | RAM | 0.80 | 24.13 | 2917.9% | WithResponse |
+| download-5GiB | 5.0GiB | Disk | 0.79 | 5.83 | 641.1% | WithResponse |
 
 ## Detailed Performance Breakdown - WINDOWS_NETSTANDARD
 
@@ -328,8 +328,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.78 | 6.06 | 0.13x |
-| **Average Time (s)** | 1.1 | 0.2 | 0.15x |
+| **Throughput (Gb/s)** | 0.78 | 6.06 | 7.72x |
+| **Average Time (s)** | 1.1 | 0.2 | 6.70x |
 
 #### Statistical Details
 
@@ -346,8 +346,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.70 | 3.60 | 0.20x |
-| **Average Time (s)** | 1.2 | 0.3 | 0.21x |
+| **Throughput (Gb/s)** | 0.70 | 3.60 | 5.11x |
+| **Average Time (s)** | 1.2 | 0.3 | 4.73x |
 
 #### Statistical Details
 
@@ -364,8 +364,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.80 | 12.18 | 0.07x |
-| **Average Time (s)** | 10.8 | 0.7 | 0.07x |
+| **Throughput (Gb/s)** | 0.80 | 12.18 | 15.26x |
+| **Average Time (s)** | 10.8 | 0.7 | 14.82x |
 
 #### Statistical Details
 
@@ -382,8 +382,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.79 | 8.27 | 0.09x |
-| **Average Time (s)** | 11.0 | 1.1 | 0.10x |
+| **Throughput (Gb/s)** | 0.79 | 8.27 | 10.53x |
+| **Average Time (s)** | 11.0 | 1.1 | 10.14x |
 
 #### Statistical Details
 
@@ -400,8 +400,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.80 | 19.88 | 0.04x |
-| **Average Time (s)** | 322.2 | 13.0 | 0.04x |
+| **Throughput (Gb/s)** | 0.80 | 19.88 | 24.85x |
+| **Average Time (s)** | 322.2 | 13.0 | 24.73x |
 
 #### Statistical Details
 
@@ -418,8 +418,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.78 | 5.13 | 0.15x |
-| **Average Time (s)** | 329.5 | 50.3 | 0.15x |
+| **Throughput (Gb/s)** | 0.78 | 5.13 | 6.55x |
+| **Average Time (s)** | 329.5 | 50.3 | 6.55x |
 
 #### Statistical Details
 
@@ -436,8 +436,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.80 | 24.13 | 0.03x |
-| **Average Time (s)** | 53.7 | 1.8 | 0.03x |
+| **Throughput (Gb/s)** | 0.80 | 24.13 | 30.18x |
+| **Average Time (s)** | 53.7 | 1.8 | 29.62x |
 
 #### Statistical Details
 
@@ -454,8 +454,8 @@ This report compares Regular APIs vs WithResponse APIs download performance acro
 
 | Metric | Regular APIs | WithResponse APIs | Comparison |
 |--------|--------------|-------------------|------------|
-| **Throughput (Gb/s)** | 0.79 | 5.83 | 0.13x |
-| **Average Time (s)** | 54.7 | 7.6 | 0.14x |
+| **Throughput (Gb/s)** | 0.79 | 5.83 | 7.41x |
+| **Average Time (s)** | 54.7 | 7.6 | 7.20x |
 
 #### Statistical Details
 

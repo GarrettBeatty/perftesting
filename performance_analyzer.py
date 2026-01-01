@@ -174,15 +174,16 @@ class PerformanceAnalyzer:
         regular_stats = regular.get_stats()
         withresponse_stats = withresponse.get_stats()
         
-        # Calculate difference ratios (positive means regular is faster)
-        time_ratio = withresponse_stats['mean_time'] / regular_stats['mean_time']
-        throughput_ratio = regular_stats['mean_throughput'] / withresponse_stats['mean_throughput']
+        # Calculate difference ratios showing how much better WithResponse is compared to Regular
+        # Values > 1 mean WithResponse is better
+        time_ratio = regular_stats['mean_time'] / withresponse_stats['mean_time']  # Higher = WithResponse is faster
+        throughput_ratio = withresponse_stats['mean_throughput'] / regular_stats['mean_throughput']  # Higher = WithResponse has better throughput
         
         return {
             'time_ratio': time_ratio,
             'throughput_ratio': throughput_ratio,
             'time_difference_percent': ((withresponse_stats['mean_time'] - regular_stats['mean_time']) / regular_stats['mean_time']) * 100,
-            'throughput_difference_percent': ((regular_stats['mean_throughput'] - withresponse_stats['mean_throughput']) / withresponse_stats['mean_throughput']) * 100,
+            'throughput_difference_percent': ((withresponse_stats['mean_throughput'] - regular_stats['mean_throughput']) / regular_stats['mean_throughput']) * 100,
             'regular_mean_time': regular_stats['mean_time'],
             'withresponse_mean_time': withresponse_stats['mean_time'],
             'regular_mean_throughput': regular_stats['mean_throughput'],
@@ -268,10 +269,12 @@ class PerformanceAnalyzer:
                 report_lines.append(f"Regular APIs:     {comparison['regular_mean_throughput']:8.2f} Gb/s (avg {comparison['regular_mean_time']:6.1f}s)")
                 report_lines.append(f"WithResponse APIs: {comparison['withresponse_mean_throughput']:8.2f} Gb/s (avg {comparison['withresponse_mean_time']:6.1f}s)")
                 
-                if comparison['regular_mean_throughput'] > comparison['withresponse_mean_throughput']:
-                    report_lines.append(f"Result:           Regular is {comparison['throughput_ratio']:.1f}x faster ({comparison['throughput_difference_percent']:.1f}% better throughput)")
+                if comparison['throughput_ratio'] >= 1.0:
+                    # WithResponse is better (ratio >= 1)
+                    report_lines.append(f"Result:           WithResponse is {comparison['throughput_ratio']:.1f}x faster ({comparison['throughput_difference_percent']:.1f}% better throughput)")
                 else:
-                    report_lines.append(f"Result:           WithResponse is {1/comparison['throughput_ratio']:.1f}x faster ({-comparison['throughput_difference_percent']:.1f}% better throughput)")
+                    # Regular is better (ratio < 1)
+                    report_lines.append(f"Result:           Regular is {1/comparison['throughput_ratio']:.1f}x faster ({-comparison['throughput_difference_percent']:.1f}% better throughput)")
         
         return "\n".join(report_lines)
     
