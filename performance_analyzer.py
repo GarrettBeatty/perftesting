@@ -451,6 +451,112 @@ class PerformanceAnalyzer:
         
         return "\n".join(markdown_lines)
     
+    def generate_markdown_overview(self) -> str:
+        """Generate cross-platform overview section"""
+        markdown_lines = []
+        
+        markdown_lines.append("## Executive Overview - Cross-Platform Comparison")
+        markdown_lines.append("")
+        
+        # Collect all test results across platforms
+        all_pairs = []
+        for platform in self.results.keys():
+            if not self.results[platform]:
+                continue
+            pairs = self.find_test_pairs(platform)
+            for regular, withresponse in pairs:
+                comparison = self.calculate_improvement(regular, withresponse)
+                storage_type = "Disk" if regular.files_on_disk else "RAM"
+                file_size = self.format_file_size(regular.file_size_bytes)
+                
+                faster = "Regular" if comparison['regular_mean_throughput'] > comparison['withresponse_mean_throughput'] else "WithResponse"
+                diff_pct = abs(comparison['throughput_difference_percent'])
+                
+                all_pairs.append({
+                    'platform': platform,
+                    'file_size': file_size,
+                    'storage': storage_type,
+                    'regular_throughput': comparison['regular_mean_throughput'],
+                    'withresponse_throughput': comparison['withresponse_mean_throughput'],
+                    'difference': diff_pct,
+                    'faster': faster
+                })
+        
+        if not all_pairs:
+            return "No test data available for overview."
+        
+        # Create comprehensive overview table
+        markdown_lines.append("### Summary Table - All Platforms")
+        markdown_lines.append("")
+        markdown_lines.append("| Platform | File Size | Storage | Regular (Gb/s) | WithResp (Gb/s) | Difference | Faster API |")
+        markdown_lines.append("|----------|-----------|---------|----------------|-----------------|------------|------------|")
+        
+        for pair in all_pairs:
+            markdown_lines.append(
+                f"| {pair['platform']} | {pair['file_size']} | {pair['storage']} | "
+                f"{pair['regular_throughput']:.2f} | {pair['withresponse_throughput']:.2f} | "
+                f"{pair['difference']:.1f}% | {pair['faster']} |"
+            )
+        
+        markdown_lines.append("")
+        
+        # Add key insights
+        markdown_lines.append("### Key Insights")
+        markdown_lines.append("")
+        
+        # Count wins for each API type
+        regular_wins = sum(1 for p in all_pairs if p['faster'] == 'Regular')
+        withresponse_wins = sum(1 for p in all_pairs if p['faster'] == 'WithResponse')
+        
+        markdown_lines.append(f"- **Total Test Scenarios:** {len(all_pairs)}")
+        markdown_lines.append(f"- **WithResponse API Wins:** {withresponse_wins} scenarios ({withresponse_wins/len(all_pairs)*100:.1f}%)")
+        markdown_lines.append(f"- **Regular API Wins:** {regular_wins} scenarios ({regular_wins/len(all_pairs)*100:.1f}%)")
+        markdown_lines.append("")
+        
+        # Analyze platform performance
+        markdown_lines.append("#### Platform-Specific Observations")
+        markdown_lines.append("")
+        
+        for platform in sorted(self.results.keys()):
+            if not self.results[platform]:
+                continue
+            platform_pairs = [p for p in all_pairs if p['platform'] == platform]
+            platform_withresp_wins = sum(1 for p in platform_pairs if p['faster'] == 'WithResponse')
+            platform_regular_wins = sum(1 for p in platform_pairs if p['faster'] == 'Regular')
+            
+            avg_withresp_throughput = sum(p['withresponse_throughput'] for p in platform_pairs) / len(platform_pairs)
+            avg_regular_throughput = sum(p['regular_throughput'] for p in platform_pairs) / len(platform_pairs)
+            
+            markdown_lines.append(f"**{platform.upper()}:**")
+            markdown_lines.append(f"- WithResponse wins: {platform_withresp_wins}/{len(platform_pairs)} scenarios")
+            markdown_lines.append(f"- Regular wins: {platform_regular_wins}/{len(platform_pairs)} scenarios")
+            markdown_lines.append(f"- Average WithResponse throughput: {avg_withresp_throughput:.2f} Gb/s")
+            markdown_lines.append(f"- Average Regular throughput: {avg_regular_throughput:.2f} Gb/s")
+            markdown_lines.append("")
+        
+        # Storage impact analysis
+        ram_pairs = [p for p in all_pairs if p['storage'] == 'RAM']
+        disk_pairs = [p for p in all_pairs if p['storage'] == 'Disk']
+        
+        if ram_pairs:
+            ram_withresp_wins = sum(1 for p in ram_pairs if p['faster'] == 'WithResponse')
+            markdown_lines.append("#### Storage Type Impact")
+            markdown_lines.append("")
+            markdown_lines.append(f"**RAM Storage:**")
+            markdown_lines.append(f"- WithResponse wins: {ram_withresp_wins}/{len(ram_pairs)} scenarios ({ram_withresp_wins/len(ram_pairs)*100:.1f}%)")
+            markdown_lines.append("")
+        
+        if disk_pairs:
+            disk_withresp_wins = sum(1 for p in disk_pairs if p['faster'] == 'WithResponse')
+            markdown_lines.append(f"**Disk Storage:**")
+            markdown_lines.append(f"- WithResponse wins: {disk_withresp_wins}/{len(disk_pairs)} scenarios ({disk_withresp_wins/len(disk_pairs)*100:.1f}%)")
+            markdown_lines.append("")
+        
+        markdown_lines.append("---")
+        markdown_lines.append("")
+        
+        return "\n".join(markdown_lines)
+    
     def generate_markdown_report(self, platform: str = None) -> str:
         """Generate a comprehensive markdown performance comparison report"""
         if platform and platform not in self.results:
@@ -464,6 +570,12 @@ class PerformanceAnalyzer:
         markdown_lines.append("This report compares Regular APIs vs WithResponse APIs download performance across different platforms.")
         markdown_lines.append("")
         
+        # Add overview section only if processing all platforms
+        if not platform:
+            overview = self.generate_markdown_overview()
+            markdown_lines.append(overview)
+        
+        # Add detailed sections for each platform
         for plat in platforms_to_process:
             if not self.results[plat]:
                 continue

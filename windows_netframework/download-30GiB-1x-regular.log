@@ -1,0 +1,20 @@
+=== Running download-30GiB-1x.run.json with regular APIs ===
+Start time: 12/31/2025 20:17:50
+
+
+Workload Configuration:
+- MaxRepeatCount: 3
+- MaxRepeatSecs: 100000
+- FilesOnDisk: True
+- WithResponseApis: False
+
+Tasks:
+- Task: action=download, size=32,212,254,720 bytes, key=download/30GiB-1x/1
+
+Total bytes per run: 32,212,254,720
+
+Run:1 Secs:329.009244 Gb/s:0.783255
+Run:2 Secs:324.346193 Gb/s:0.794515
+Run:3 Secs:323.741033 Gb/s:0.796001
+
+End time: 12/31/2025 20:34:15

@@ -1,0 +1,27 @@
+=== Running download-5GiB-1x-ram.run.json with WithResponse APIs ===
+Start time: 12/31/2025 20:16:11
+
+
+Workload Configuration:
+- MaxRepeatCount: 10
+- MaxRepeatSecs: 600
+- FilesOnDisk: False
+- WithResponseApis: True
+
+Tasks:
+- Task: action=download, size=5,368,709,120 bytes, key=download/5GiB-1x/1
+
+Total bytes per run: 5,368,709,120
+
+Run:1 Secs:10.588664 Gb/s:4.056194
+Run:2 Secs:9.641166 Gb/s:4.454821
+Run:3 Secs:9.832243 Gb/s:4.368248
+Run:4 Secs:9.519274 Gb/s:4.511864
+Run:5 Secs:9.798767 Gb/s:4.383171
+Run:6 Secs:9.386708 Gb/s:4.575584
+Run:7 Secs:9.804780 Gb/s:4.380483
+Run:8 Secs:9.599038 Gb/s:4.474373
+Run:9 Secs:9.409090 Gb/s:4.564700
+Run:10 Secs:9.864025 Gb/s:4.354173
+
+End time: 12/31/2025 20:17:50
